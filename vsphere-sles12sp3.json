@@ -1,0 +1,147 @@
+{
+  "builders": [
+    {
+      "cluster": "DC04-VC04-Cluster14",
+      "communicator": "ssh",
+      "convert_to_template": "true",
+      "cpus": "2",
+      "datastore": "DC04_VC04_C14_13",
+      "host": "dc04p10esx011.phx.sf.priv",
+      "disk_controller_type": "lsilogic-sas",
+      "usb_controller": "true",
+      "shutdown_command": "sudo /sbin/shutdown -P now",
+      "shutdown_timeout": "25m",
+      "guest_os_type": "sles12_64Guest",
+      "ssh_username": "root",
+      "ssh_password": "root_user_password",
+      "floppy_files": [
+        "/build/scripts/manjesh/lnx/autoinst.xml"
+      ],
+      "boot_wait": "15s",
+      "boot_command": [
+         "<down><wait><tab><wait>",
+         "netsetup=dhcp autoyast=device://fd0/autoinst.xml install=cd:/<wait>",
+         "<enter><wait>"
+            ],
+      "insecure_connection": "true",
+      "iso_paths": [
+        "[DC04_TEMPLATE_01] ISOs/SLE-12-SP3-Server-DVD-x86_64-GM-DVD1.iso"
+      ],
+      "network_adapters": [
+        {
+          "network": "MGMT_198",
+          "network_card": "vmxnet3",
+          "mac_address": "00:50:56:84:CC:04"
+        }
+      ],
+
+      "password": " ",
+      "ram": "4096",
+      "storage": [
+        {
+          "disk_size": "60600",
+          "disk_thin_provisioned": true
+        }
+      ],
+      "type": "vsphere-iso",
+      "username": "svc_aut_bld",
+      "vcenter_server": "dc04vmvc04",
+      "vm_name": "manjesh-vsphere-tst",
+      "export": { "force": true,
+                  "output_directory": "./output-sles12sp3"
+                },
+      "ip_settle_timeout": "120s",
+      "ip_wait_address": "10.4.198.0/24"
+    }
+  ],
+"provisioners": [ 
+    {
+            "inline": [
+                "sudo dracut --force-drivers \"vmw_pvscsi virtio_blk hv_vmbus hv_netvsc hv_storvsc ahci megaraid_sas hpsa\" --filesystems \"btrfs ext3 xfs\" --force",
+                "sudo zypper ar http://YourRepoIP:50000/repo/SUSE/Products/SLE-SERVER/12-SP5/x86_64/product/ SLE-SERVER-BASE",
+                "sudo zypper ar http://YourRepoIP:50000/repo/SUSE/Updates/SLE-SERVER/12-SP5/x86_64/update/ SLE-SERVER-UPDATE",
+                "sudo zypper ref",
+                "sudo zypper --version",
+                "sudo zypper -n update --auto-agree-with-licenses",
+                "sudo zypper ar http://YourRepoIP:50000/repo/SUSE/Products/SLE-Module-Public-Cloud/12/x86_64/product/ SLE-Module-Public-Cloud",
+                "sudo zypper ar http://YourRepoIP:50000/repo/SUSE/Updates/SLE-Module-Public-Cloud/12/x86_64/update/ SLE-Module-Public-Cloud-Update",
+                "sudo zypper ar http://YourRepoIP/hcm/platform/yum/SLES/12.5/ hcm_platform_services",
+                "sudo zypper --no-gpg-checks ref",
+                "sudo zypper -n install cloud-init",
+                "sudo zypper -n install hyper-v",
+                "sudo zypper -n install zabbix-agent",
+                "sudo zypper -n --no-gpg-checks install metricbeat filebeat msktutil splunkforwarder",
+                "wget -O /tmp/cloud.tar.gz http://NFSstore/hcm/platform/files/cloud.tar.gz",
+                "cd /;sudo tar xzfv /tmp/cloud.tar.gz",
+                "sudo zypper -n install WALinuxAgent",
+                "sudo sed -ie 's|^GRUB_CMDLINE_LINUX_DEFAULT=.*$|GRUB_CMDLINE_LINUX_DEFAULT=\"resume=/dev/vg0/lv_swap console=ttyS0 earlyprintk=ttyS0 rootdelay=300 elevator=noop transparent_hugepage=never\"|g' /etc/default/grub",
+                "sudo grub2-mkconfig -o /boot/grub2/grub.cfg",
+                "sudo dracut --force-drivers \"vmw_pvscsi virtio_blk hv_vmbus hv_netvsc hv_storvsc ahci megaraid_sas hpsa\" --filesystems \"btrfs ext3 xfs\" --force --regenerate-all",
+                "sudo sed -i '1d' /etc/fstab",
+                "sudo wget -O /etc/waagent.conf http://NFSstore/hcm/platform/files/waagent_sles12.conf",
+                "sudo ln -s '/usr/lib/systemd/system/waagent.service' '/etc/systemd/system/multi-user.target.wants/waagent.service'",
+                "sudo wget -O /tmp/chef-11.8.2-1.el5.x86_64.rpm http://YourRepoIP/hcm/platform/chef/chef-client/chef-11.18.12-1.el6.x86_64.rpm",
+                "sudo rpm -ivh /tmp/chef-11.8.2-1.el5.x86_64.rpm",
+                "sudo waagent -force -deprovision"
+            ],
+            "type": "shell"
+        },
+        {
+            "type": "file",
+            "destination": "/tmp/chef_solo",
+            "source": "/build/scripts/manjesh/repos/Cloud-imagebuild/chef_solo"
+        },
+        {
+            "inline": [
+                "ls -lrt /tmp/chef_solo"
+            ],
+            "type": "shell"
+        },
+        {
+            "inline": [
+                "sudo chef-solo -c /tmp/chef_solo/solo.rb -j /tmp/chef_solo/node.json"
+            ],
+            "type": "shell"
+        },
+        {
+            "inline": [
+                "echo RemovingRepos ; for i in $(seq $(($(sudo zypper lr | wc -l)-4))); do sudo zypper rr 1; done ; echo Done_RemovingRepos"
+            ],
+            "type": "shell"
+        },
+        {
+            "inline": [
+                "sudo echo 'ccloud ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
+            ],
+            "type": "shell"
+        },
+        {
+            "type": "file",
+            "destination": "/tmp/release_notes.sh",
+            "source": "/build/scripts/manjesh/repos/Cloud-imagebuild/scripts/release_notes.sh"
+        },
+        {
+            "type": "file",
+            "destination": "/tmp/blacklist.sh",
+            "source": "/build/scripts/manjesh/repos/Cloud-imagebuild/scripts/blacklist.sh"
+        },
+        {
+            "inline": "sudo bash /tmp/blacklist.sh",
+            "type": "shell"
+        },
+        {
+            "inline": "sudo bash /tmp/release_notes.sh",
+            "type": "shell"
+        },
+        {
+            "type": "file",
+            "destination": "/tmp/ipv4_tcp_update.sh",
+            "source": "/build/scripts/manjesh/repos/Cloud-imagebuild/scripts/ipv4_tcp_update.sh"
+        },
+        {
+            "inline": "sudo bash /tmp/ipv4_tcp_update.sh",
+            "type": "shell"
+        }
+    ],
+    "variables": {}
+}

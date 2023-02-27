@@ -1,0 +1,258 @@
+<profile xmlns:ns0="http://www.suse.com/1.0/configns">
+    <general>
+        <mode>
+            <confirm ns0:type="boolean">false</confirm>
+            <second_stage ns0:type="boolean">true</second_stage>
+        </mode>
+    </general>
+    <add-on>
+        <add_on_products ns0:type="list" />
+    </add-on>
+    <deploy_image>
+       <image_installation ns0:type="boolean">false</image_installation>
+    </deploy_image>
+    <partitioning ns0:type="list">
+        <drive>
+            <device>/dev/sda</device>
+            <disklabel>msdos</disklabel>
+            <enable_snapshots ns0:type="boolean">true</enable_snapshots>
+            <initialize ns0:type="boolean">true</initialize>
+            <partitions ns0:type="list">
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">ext3</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>acl,user_xattr</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <mount>/boot</mount>
+                    <mountby ns0:type="symbol">uuid</mountby>
+                    <partition_id ns0:type="integer">131</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>517111296</size>
+                </partition>
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <format ns0:type="boolean">false</format>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lvm_group>vg0</lvm_group>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">142</partition_id>
+                    <partition_nr ns0:type="integer">2</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>60G</size>
+                </partition>
+            </partitions>
+            <pesize />
+            <type ns0:type="symbol">CT_DISK</type>
+            <use>all</use>
+        </drive>
+        <drive>
+            <device>/dev/vg0</device>
+            <disklabel>msdos</disklabel>
+            <enable_snapshots ns0:type="boolean">true</enable_snapshots>
+            <initialize ns0:type="boolean">true</initialize>
+            <partitions ns0:type="list">
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">xfs</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>defaults</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lv_name>lv_opt</lv_name>
+                    <mount>/opt</mount>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">131</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>10G</size>
+                </partition>
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">xfs</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>defaults</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lv_name>lv_root</lv_name>
+                    <mount>/</mount>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">131</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>10G</size>
+                </partition>
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">swap</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>defaults</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lv_name>lv_swap</lv_name>
+                    <mount>swap</mount>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">130</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>2147483648</size>
+                </partition>
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">xfs</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>defaults</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lv_name>lv_tmp</lv_name>
+                    <mount>/tmp</mount>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">131</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>10G</size>
+                </partition>
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">xfs</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>defaults</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lv_name>lv_var</lv_name>
+                    <mount>/var</mount>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">131</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>10G</size>
+                </partition>
+                <partition>
+                    <create ns0:type="boolean">true</create>
+                    <crypt_fs ns0:type="boolean">false</crypt_fs>
+                    <filesystem ns0:type="symbol">xfs</filesystem>
+                    <format ns0:type="boolean">true</format>
+                    <fstopt>defaults</fstopt>
+                    <loop_fs ns0:type="boolean">false</loop_fs>
+                    <lv_name>lv_var_log</lv_name>
+                    <mount>/var/log</mount>
+                    <mountby ns0:type="symbol">device</mountby>
+                    <partition_id ns0:type="integer">131</partition_id>
+                    <partition_nr ns0:type="integer">1</partition_nr>
+                    <resize ns0:type="boolean">false</resize>
+                    <size>10G</size>
+                </partition>
+            </partitions>
+            <pesize>4M</pesize>
+            <type ns0:type="symbol">CT_LVM</type>
+            <use>all</use>
+        </drive>
+    </partitioning>
+    <software>
+        <image />
+        <install_recommended ns0:type="boolean">true</install_recommended>
+        <instsource />
+        <packages ns0:type="list">
+            <package>xfsprogs</package>
+            <package>syslinux</package>
+            <package>sles-release</package>
+            <package>openssh</package>
+            <package>lvm2</package>
+            <package>kexec-tools</package>
+            <package>glibc</package>
+            <package>e2fsprogs</package>
+            <package>nscd</package>
+            <package>audit</package>
+            <package>postfix</package>
+            <package>ntp</package>
+            <package>wget</package>
+            <package>unzip</package>
+            <package>bind-utils</package>
+            <package>libtalloc2</package>
+            <package>python-talloc</package>
+            <package>sssd</package>
+            <package>sssd-krb5-common</package>
+            <package>sssd-tools</package>
+            <package>python-sssd-config</package>
+            <package>sssd-ad</package>
+            <package>open-vm-tools-desktop</package>
+        </packages>
+        <patterns ns0:type="list">
+            <pattern>Minimal</pattern>
+            <pattern>base</pattern>
+        </patterns>
+    </software>
+    <users ns0:type="list">
+      <user>
+          <username>root</username>
+          <user_password>$6$o1u5/wxE$UWzzB27eaGa3TizpoPcq.xTOalIw54eNxonEFVai90cG0ummcogSqmIcXXq/h1bd45RPE610SWjYzYM5FBHUD/</user_password>
+          <encrypted ns0:type="boolean">true</encrypted>
+          <forename />
+          <surname />
+      </user>
+      <user>
+          <username>ccloud</username>
+          <user_password>$6$A0vTsn71zywrkjFJ$2P1tOC9BC4QQwK6WVL18FSrROr5m3vpqHvc6xC1k9mSHH7gzGpZRJyguTyDZKxW1jjS2cAImtFt3e7oSQ7r110</user_password>
+          <encrypted ns0:type="boolean">true</encrypted>
+          <forename>ccloud</forename>
+          <surname>Linux</surname>
+      </user>
+    </users>
+    <scripts>
+    <post-scripts ns0:type="list">
+        <script>
+            <filename>setup-sudo.sh</filename>
+            <network_needed ns0:type="boolean">false</network_needed>
+            <notification>Post install: Change SUDO Settings</notification>
+            <interpreter>shell</interpreter>
+            <source>
+#!/bin/bash
+echo "ccloud ALL=(ALL) NOPASSWD: ALL" &gt;&gt;/etc/sudoers
+            </source>
+        </script>
+        </post-scripts>
+    </scripts>
+    <networking>
+        <dns>
+            <dhcp_hostname ns0:type="boolean">true</dhcp_hostname>
+            <domain>phx.sf.priv</domain>
+            <hostname>sles12sp3-SDO-automation-2020-11-06-16-57-10</hostname>
+            <resolv_conf_policy>auto</resolv_conf_policy>
+            <write_hostname ns0:type="boolean">true</write_hostname>
+        </dns>
+        <interfaces ns0:type="list">
+            <interface>
+                <bootproto>dhcp</bootproto>
+                <device>eth0</device>
+                <startmode>auto</startmode>
+            </interface>
+            <interface>
+                <bootproto>static</bootproto>
+                <broadcast>127.255.255.255</broadcast>
+                <device>lo</device>
+                <firewall>no</firewall>
+                <ipaddr>127.0.0.1</ipaddr>
+                <netmask>255.0.0.0</netmask>
+                <network>127.0.0.0</network>
+                <prefixlen>8</prefixlen>
+                <usercontrol>no</usercontrol>
+            </interface>
+        </interfaces>
+        <ipv6 ns0:type="boolean">false</ipv6>
+    </networking>
+    <firewall>
+        <enable_firewall ns0:type="boolean">false</enable_firewall>
+        <start_firewall ns0:type="boolean">false</start_firewall>
+    </firewall>
+    <services-manager>
+        <default_target>multi-user</default_target>
+        <services>
+        <enable ns0:type="list">
+           <service>sshd</service>
+        </enable>
+        </services>
+    </services-manager>
+</profile>
