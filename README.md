@@ -1,5 +1,6 @@
-
-# *(POC) SLES Image build using packer (vsphere-ISO - Alternate for VirtualBox build)*
+# ImageAutomation-vsphere-ISO-linux
+Legacy DataCenter Linux (SLES) Image build using Packer and VSphere-ISO
+# * SLES Image build using packer (vsphere-ISO - Alternate for VirtualBox build)*
 
 ## _Prerequisite:_
 
